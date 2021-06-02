@@ -1,0 +1,47 @@
+<div ui-view="left-menu">
+  <div class="builder-menu" cdkDrag>
+    <i class="ladi-icon icon-dots builder-menu-move" cdkDragHandle></i>
+    <ul>
+      <ng-container *ngFor="let itemMenu of menuLeft; index as index">
+        <li
+          class="builder-menu-two-column"
+          [attr.data-key]="itemMenu.dataKey"
+          (click)="clickItem(index)"
+        >
+          <div
+            class="builder-menu-click has-builder-menu-child"
+            [ngClass]="{ selected: itemMenu.isSelected }"
+          >
+            <i class="ladi-icon" [ngClass]="itemMenu.icon"></i>
+            <span>{{ itemMenu.name }}</span>
+          </div>
+          <ul
+            class="builder-menu-child"
+            [ngClass]="{ selected: itemMenu.isSelected }"
+          >
+            <ng-container *ngFor="let childItem of itemMenu.childMenu">
+              <li (click)="clickChild(childItem.elementType, index, $event)">
+                <i class="ladi-icon" [ngClass]="childItem.icon"></i
+                ><span>{{ childItem.name }}</span>
+              </li>
+            </ng-container>
+          </ul>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+
+  <div class="builder-menu-layer" ng-class="classLayer()">
+    <i class="ladi-icon icon-dots builder-menu-move"></i>
+    <i
+      ng-click="closeLayer($event)"
+      class="ladi-icon icon-e-remove builder-menu-layer-close"
+    ></i>
+    <span translate="" class="builder-menu-layer-title">Layer</span>
+    <div class="builder-menu-layer-filter">
+      <input type="text" placeholder="Tìm kiếm..." />
+    </div>
+
+    <div class="builder-menu-layer-content"></div>
+  </div>
+</div>

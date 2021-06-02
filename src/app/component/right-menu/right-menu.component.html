@@ -1,0 +1,447 @@
+<div ui-view="right-menu">
+  <div class="builder-menu-navigation builder-menu" cdkDrag>
+    <i class="ladi-icon icon-dots builder-menu-move" cdkDragHandle></i>
+    <ul>
+      <!---->
+      <li
+        ng-click="clickItem($event)"
+        menu-item=""
+        ng-repeat="item in listMenu"
+      >
+        <div
+          ng-class="classItem()"
+          class="builder-menu-click has-builder-menu-child"
+        >
+          <i ng-class="item.iconClassName" class="ladi-icon icon-publish"></i>
+          <span translate="">Xuất bản</span>
+        </div>
+        <ul ng-class="classChild()" class="builder-menu-child">
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-preview"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Xem trước</span
+            ><!---->
+            <!---->
+            <!----><span ng-if="hasShortcut" class="builder-menu-shortcut"
+              >CTRL + P</span
+            ><!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-publish"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Xuất bản</span
+            ><!---->
+            <!---->
+            <!----><span ng-if="hasShortcut" class="builder-menu-shortcut"
+              >CTRL + Shift + P</span
+            ><!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-cloud-download"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Lưu</span
+            ><!---->
+            <!---->
+            <!----><span ng-if="hasShortcut" class="builder-menu-shortcut"
+              >CTRL + S</span
+            ><!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-history"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Lịch sử chỉnh sửa</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+        </ul>
+      </li>
+      <!---->
+      <li
+        ng-click="clickItem($event)"
+        menu-item=""
+        ng-repeat="item in listMenu"
+      >
+        <div ng-class="classItem()" class="builder-menu-click">
+          <i ng-class="item.iconClassName" class="ladi-icon icon-mobile"></i>
+          <span translate="">Mobile</span>
+        </div>
+        <ul ng-class="classChild()" class="builder-menu-child">
+          <!---->
+        </ul>
+      </li>
+      <!---->
+      <li
+        ng-click="clickItem($event)"
+        menu-item=""
+        ng-repeat="item in listMenu"
+      >
+        <div
+          ng-class="classItem()"
+          class="builder-menu-click has-builder-menu-child"
+        >
+          <i ng-class="item.iconClassName" class="ladi-icon icon-undo"></i>
+          <span translate="">Undo</span>
+        </div>
+        <ul ng-class="classChild()" class="builder-menu-child">
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-undo"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Undo</span
+            ><!---->
+            <!---->
+            <!----><span ng-if="hasShortcut" class="builder-menu-shortcut"
+              >CTRL + Z</span
+            ><!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-redo"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Redo</span
+            ><!---->
+            <!---->
+            <!----><span ng-if="hasShortcut" class="builder-menu-shortcut"
+              >CTRL + Shift + Z</span
+            ><!---->
+          </li>
+          <!---->
+        </ul>
+      </li>
+      <!---->
+      <li
+        ng-click="clickItem($event)"
+        menu-item=""
+        ng-repeat="item in listMenu"
+      >
+        <div
+          ng-class="classItem()"
+          class="builder-menu-click has-builder-menu-child"
+        >
+          <i ng-class="item.iconClassName" class="ladi-icon icon-settings"></i>
+          <span translate="">Thiết lập</span>
+        </div>
+        <ul ng-class="classChild()" class="builder-menu-child">
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-logo-facebook"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">SEO &amp; Social</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-html"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Mã chuyển đổi</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-html"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Mã Javascript/CSS</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-fonts"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Quản lý Font</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-fonts"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Quản lý Dataset</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-page-setting"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Thiết lập toàn trang</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-grid-view"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Bật/Tắt Grid</span
+            ><!---->
+            <!---->
+            <!----><span ng-if="hasShortcut" class="builder-menu-shortcut"
+              >CTRL + '</span
+            ><!---->
+          </li>
+          <!---->
+        </ul>
+      </li>
+      <!---->
+      <li
+        ng-click="clickItem($event)"
+        menu-item=""
+        ng-repeat="item in listMenu"
+      >
+        <div
+          ng-class="classItem()"
+          class="builder-menu-click has-builder-menu-child"
+        >
+          <i
+            ng-class="item.iconClassName"
+            class="ladi-icon icon-chat-support"
+          ></i>
+          <span translate="">LiveChat</span>
+        </div>
+        <ul ng-class="classChild()" class="builder-menu-child">
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-chat-support"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">LiveChat với chúng tôi</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-blog"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Tài liệu hướng dẫn</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-hot-key"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Phím tắt</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-logo-facebook"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Cộng đồng LadiPage</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+          <li
+            ng-click="clickChild($event)"
+            data-name=""
+            menu-item-child=""
+            ng-repeat="child in item.childs"
+          >
+            <!----><i
+              ng-if="!isShowIconImage()"
+              ng-class="child.className"
+              class="ladi-icon icon-c-warning"
+            ></i
+            ><!---->
+            <!---->
+            <!----><span ng-if="!child.isBold">Yêu cầu tính năng</span
+            ><!---->
+            <!---->
+            <!---->
+          </li>
+          <!---->
+        </ul>
+      </li>
+      <!---->
+    </ul>
+  </div>
+</div>

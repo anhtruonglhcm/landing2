@@ -1,0 +1,287 @@
+<div
+  appQuickEditor
+  id="builder-quick-editor"
+  class="builder-quick-editor"
+  [style.top.px]="quickEditorTop"
+  [style.left.px]="quickEditorLeft"
+>
+  <ul>
+    <!---->
+    <!---->
+    <li
+      ng-if="showMoveUpDown &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop"
+      ng-style="styleQuickEditorUpDown()"
+      id="builder-quick-editor-up-down"
+      class="builder-quick-editor-up-down"
+    >
+      <i class="ladi-icon icon-cross-vertical"></i>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Lên trên (CTRL + ⬆)"
+      ng-if="!showSavePopup &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop &amp;&amp; showElementUpDown"
+      ng-click="upIndexElement($event)"
+    >
+      <i class="ladi-icon icon-forward"></i>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Xuống dưới (CTRL + ⬇)"
+      ng-if="!showSavePopup &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop &amp;&amp; showElementUpDown"
+      ng-click="downIndexElement($event)"
+    >
+      <i class="ladi-icon icon-backward"></i>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Xoá (DEL)"
+      ng-if="showRemove &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop"
+      (click)="deleteElement($event)"
+    >
+      <i class="ladi-icon icon-bin"></i>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Nhân bản (CTRL + D)"
+      ng-if="showDuplicate &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop"
+      class="builder-quick-editor-border-right"
+      ng-click="duplicateElement($event)"
+    >
+      <i class="ladi-icon icon-duplicate"></i>
+    </li>
+    <!---->
+    <!---->
+    <!---->
+    <li
+      ng-if="showEditTextInput &amp;&amp; !showEditTextRange"
+      ng-click="editText($event)"
+    >
+      <span translate="">Sửa chữ</span>
+    </li>
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <!---->
+    <li tooltip="Cỡ chữ" ng-if="showEditText &amp;&amp; !showEditTextRange">
+      <input
+        ng-input="true"
+        type="number"
+        min="0"
+        ng-change="changeFontSize()"
+        ng-model="fontSize"
+        class="
+          builder-quick-editor-input-number
+          ng-pristine ng-untouched ng-valid ng-not-empty ng-valid-min
+        "
+        id="builder-quick-editor-input-font-size"
+      />
+    </li>
+    <!---->
+    <!---->
+    <li tooltip="Màu chữ" (click)="clickTextColor($event)">
+      <i class="ladi-icon icon-text-color"></i>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Định dạng"
+      ng-if="showEditText &amp;&amp; !showEditTextRange"
+      ng-click="clickMenuChildFontCustom($event)"
+    >
+      <i class="icon-click ladi-icon icon-bold"></i>
+      <ul ng-class="classMenuChildFontCustom()" class="builder-menu-child">
+        <li ng-click="clickTextBold($event)" ng-class="classTextBold()">
+          <i class="ladi-icon icon-bold"></i> <span translate="">In đậm</span>
+        </li>
+        <li ng-click="clickTextItalic($event)" ng-class="classTextItalic()">
+          <i class="ladi-icon icon-italic"></i>
+          <span translate="">In nghiêng</span>
+        </li>
+        <li
+          ng-click="clickTextUnderline($event)"
+          ng-class="classTextUnderline()"
+        >
+          <i class="ladi-icon icon-underline"></i>
+          <span translate="">Gạch chân</span>
+        </li>
+        <li
+          ng-click="clickTextStrikethrough($event)"
+          ng-class="classTextStrikethrough()"
+        >
+          <i class="ladi-icon icon-strikethrough"></i>
+          <span translate="">Gạch ngang</span>
+        </li>
+        <li
+          ng-click="clickTextUppercase($event)"
+          ng-class="classTextUppercase()"
+        >
+          <i class="ladi-icon icon-caps-all"></i>
+          <span translate="">In hoa</span>
+        </li>
+      </ul>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Căn chỉnh"
+      ng-if="showEditText &amp;&amp; !showEditTextRange"
+      (click)="openAlign($event)"
+    >
+      <i class="icon-click ladi-icon icon-align-center"></i>
+      <ul
+        ng-class="classMenuChildTextAlignCustom()"
+        class="builder-menu-child"
+        [ngClass]="{ selected: isAlignItem }"
+      >
+        <ng-container *ngFor="let item of AlignItemCommand">
+          <li
+            (click)="alignItemLeft(item, $event)"
+            ng-class="classTextAlignLeft()"
+          >
+            <i class="ladi-icon" [ngClass]="item.icon"></i>
+            <span translate="">{{ item.name }}</span>
+          </li>
+        </ng-container>
+        <!-- 
+        <li
+          ng-click="clickTextAlignCenter($event)"
+          ng-class="classTextAlignCenter()"
+        >
+          <i class="ladi-icon icon-align-center"></i>
+          <span translate="">Căn giữa</span>
+        </li>
+        <li
+          ng-click="clickTextAlignRight($event)"
+          ng-class="classTextAlignRight()"
+        >
+          <i class="ladi-icon icon-align-right-2"></i>
+          <span translate="">Căn phải</span>
+        </li>
+        <li
+          ng-click="clickTextAlignJustify($event)"
+          ng-class="classTextAlignJustify()"
+        >
+          <i class="ladi-icon icon-align-justify"></i>
+          <span translate="">Căn đều 2 bên</span>
+        </li> -->
+      </ul>
+    </li>
+    <!---->
+    <!---->
+    <li
+      tooltip="Hành động khác"
+      ng-if="showMore &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop"
+      class="builder-quick-editor-border-left"
+      ng-click="clickMenuChild($event)"
+    >
+      <i class="icon-click ladi-icon icon-dots-to-close"></i>
+      <ul
+        ng-class="classMenuChild()"
+        style="width: 185px"
+        class="builder-menu-child"
+      >
+        <!---->
+        <li ng-if="showDuplicate" ng-click="clickCopyElement($event)">
+          <i class="ladi-icon icon-copy"></i>
+          <span translate="">Sao chép (CTRL + C)</span>
+        </li>
+        <!---->
+        <li ng-click="clickSyncElement($event)">
+          <i class="ladi-icon icon-sync"></i>
+          <!---->
+          <!----><span ng-if="isDesktop()" translate=""
+            >Đồng bộ thiết kế từ Mobile</span
+          ><!---->
+        </li>
+        <!---->
+        <!---->
+        <!---->
+        <li
+          ng-if="showHidden &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop"
+          ng-click="clickHiddenElement($event)"
+        >
+          <i class="ladi-icon icon-b-preview"></i>
+          <span translate="">Ẩn phần tử</span>
+        </li>
+        <!---->
+        <!---->
+        <!---->
+        <li
+          ng-if="showLock &amp;&amp; !showEditTextRange &amp;&amp; !showCarouselUnCrop &amp;&amp; !showImageUnCrop"
+          ng-click="clickLockElement($event)"
+        >
+          <i class="ladi-icon icon-lock"></i>
+          <span translate="">Khoá phần tử</span>
+        </li>
+        <!---->
+        <!---->
+      </ul>
+    </li>
+    <!---->
+    <!---->
+    <li
+      id="quick-editor-setting"
+      tooltip="Thiết lập"
+      ng-if="showAttribute &amp;&amp; !showImageUnCrop"
+      ng-click="attributeElement($event)"
+    >
+      <i class="ladi-icon icon-settings"></i>
+    </li>
+    <!---->
+    <!---->
+    <li
+      ng-show="showElementDocument()"
+      tooltip="Hướng dẫn"
+      ng-click="clickElementDocument($event)"
+      class=""
+    >
+      <i class="ladi-icon icon-c-question"></i>
+    </li>
+  </ul>
+</div>
+<app-color-editor
+  *ngIf="isShowColor"
+  (closeEditor)="closeEditor()"
+></app-color-editor>

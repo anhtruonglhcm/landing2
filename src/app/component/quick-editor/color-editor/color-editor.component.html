@@ -1,0 +1,1122 @@
+<div
+  id="builder-color-editor"
+  class="builder-color-editor"
+  ng-show="showColor"
+  style="top: 31px; left: 947px"
+  cdkDrag
+>
+  <i class="ladi-icon icon-dots builder-attribute-move" cdkDragHandle></i>
+  <i
+    (click)="closeColorEditor($event)"
+    class="ladi-icon icon-e-remove builder-attribute-close"
+  ></i>
+  <div class="builder-attribute-element-title" translate="">Chọn màu</div>
+
+  <div
+    ng-show="isColor"
+    id="builder-type-color-editor"
+    class=""
+    data-loaded="1"
+  >
+    <div class="pickr">
+      <div
+        class="pcr-button disabled"
+        style="transition: none 0s ease 0s; background: rgb(0, 0, 0)"
+      ></div>
+
+      <div class="pcr-app visible" style="top: 5px; left: 0px">
+        <div class="pcr-selection">
+          <div class="pcr-color-preview">
+            <div
+              class="pcr-last-color"
+              style="transition: none 0s ease 0s; background: rgb(0, 0, 0)"
+            ></div>
+            <div
+              class="pcr-current-color"
+              style="background: rgb(0, 0, 0)"
+            ></div>
+          </div>
+
+          <div class="pcr-color-palette">
+            <div
+              class="pcr-picker"
+              style="left: -9px; top: 116px; background: rgb(0, 0, 0)"
+            ></div>
+            <div
+              class="pcr-palette"
+              style="
+                background: linear-gradient(to top, rgb(0, 0, 0), transparent),
+                  linear-gradient(to left, rgb(255, 0, 0), rgb(255, 255, 255));
+              "
+            ></div>
+          </div>
+
+          <div class="pcr-color-chooser">
+            <div
+              class="pcr-picker"
+              style="top: -9px; background-color: rgb(255, 0, 0)"
+            ></div>
+            <div class="pcr-hue pcr-slider"></div>
+          </div>
+
+          <div class="pcr-color-opacity">
+            <div
+              class="pcr-picker"
+              style="top: 116px; background: rgb(0, 0, 0)"
+            ></div>
+            <div class="pcr-opacity pcr-slider"></div>
+          </div>
+        </div>
+
+        <div class="pcr-interaction">
+          <input class="pcr-result" type="text" spellcheck="false" />
+
+          <input class="pcr-type" data-type="HEX" value="HEX" type="button" />
+          <input
+            class="pcr-type active"
+            data-type="RGBA"
+            value="RGBa"
+            type="button"
+          />
+          <input
+            class="pcr-type"
+            data-type="HSLA"
+            value="HSLa"
+            type="button"
+            style="display: none"
+            hidden=""
+          />
+          <input
+            class="pcr-type"
+            data-type="HSVA"
+            value="HSVa"
+            type="button"
+            style="display: none"
+            hidden=""
+          />
+          <input
+            class="pcr-type"
+            data-type="CMYK"
+            value="CMYK"
+            type="button"
+            style="display: none"
+            hidden=""
+          />
+
+          <input
+            class="pcr-save"
+            value="Save"
+            type="button"
+            style="display: none"
+            hidden=""
+          />
+          <input
+            class="pcr-clear"
+            value="Clear"
+            type="button"
+            style="display: none"
+            hidden=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ng-show="isColor" class="builder-type-color-default">
+    <div
+      ng-show="showMycolor"
+      class="
+        builder-type-color-default-box builder-type-color-default-box-bottom
+      "
+    >
+      <div class="builder-type-color-default-title" translate="">
+        Màu của tôi
+      </div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_mycolor"
+        style="background-color: rgb(0, 0, 0)"
+      ></div>
+      <!---->
+    </div>
+
+    <div class="builder-type-color-default-box">
+      <div class="builder-type-color-default-title" translate="">Màu mẫu</div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(0, 0, 0)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(36, 36, 36)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(84, 84, 84)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(132, 132, 132)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(180, 180, 180)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(228, 228, 228)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(255, 255, 255)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(92, 35, 10)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(145, 55, 16)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(199, 75, 22)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(232, 104, 48)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(238, 143, 102)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(244, 182, 156)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(250, 221, 209)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(92, 14, 10)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(145, 23, 16)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(199, 31, 22)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(232, 58, 48)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(238, 109, 102)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(244, 160, 156)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(250, 211, 209)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(92, 10, 51)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(145, 16, 81)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(199, 22, 111)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(232, 48, 140)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(238, 102, 170)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(244, 156, 200)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(250, 209, 230)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(50, 10, 92)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(79, 16, 145)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(108, 22, 199)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(137, 48, 232)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(168, 102, 238)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(198, 156, 244)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(229, 209, 250)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(17, 10, 92)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(27, 16, 145)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(37, 22, 199)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(64, 48, 232)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(113, 102, 238)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(163, 156, 244)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(212, 209, 250)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(10, 46, 92)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(16, 72, 145)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(22, 99, 199)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(48, 128, 232)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(102, 161, 238)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(156, 194, 244)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(209, 227, 250)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(10, 78, 92)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(16, 124, 145)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(22, 169, 199)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(48, 201, 232)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(102, 215, 238)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(156, 229, 244)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(209, 243, 250)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(10, 92, 73)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(16, 145, 115)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(22, 199, 158)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(48, 232, 189)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(102, 238, 206)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(156, 244, 223)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(209, 250, 240)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(10, 92, 21)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(16, 145, 33)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(22, 199, 46)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(48, 232, 73)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(102, 238, 120)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(156, 244, 167)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(209, 250, 215)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(62, 92, 10)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(98, 145, 16)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(134, 199, 22)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(165, 232, 48)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(188, 238, 102)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(212, 244, 156)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(235, 250, 209)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(92, 89, 10)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(145, 141, 16)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(199, 193, 22)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(232, 226, 48)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(238, 233, 102)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(244, 241, 156)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(250, 249, 209)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(92, 70, 10)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(145, 111, 16)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(199, 152, 22)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(232, 183, 48)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(238, 202, 102)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(244, 220, 156)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(250, 239, 209)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(92, 51, 10)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(145, 81, 16)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(199, 111, 22)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(232, 140, 48)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(238, 170, 102)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(244, 200, 156)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(250, 230, 209)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(77, 44, 25)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(121, 70, 40)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(166, 96, 55)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(198, 125, 83)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(213, 159, 128)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(227, 192, 172)"
+      ></div>
+      <!---->
+      <div
+        color-default-item-option=""
+        ng-style="styleItem()"
+        class="builder-type-color-default-option"
+        ng-click="clickItem($event)"
+        ng-repeat="option in list_color_default"
+        style="background-color: rgb(242, 226, 217)"
+      ></div>
+      <!---->
+    </div>
+  </div>
+
+  <div ng-show="isColorGradient" class="builder-color-angel ng-hide">
+    <label class="builder-color-angel-label" translate="">Toạ độ</label>
+    <div data-prefix="deg" class="builder-color-angel-value">
+      <input
+        ng-input="true"
+        type="number"
+        min="0"
+        ng-change="changeAngel()"
+        data-key="style_color_angel"
+        ng-model="valueAngel"
+        id="builder-color-angel-input"
+        class="ng-pristine ng-untouched ng-valid ng-empty ng-valid-min"
+      />
+    </div>
+  </div>
+  <div
+    ng-show="isColorGradient"
+    id="builder-type-color-gradient-editor-1"
+    class="builder-type-color-gradient-editor-1 ng-hide"
+  ></div>
+  <div
+    ng-show="isColorGradient"
+    id="builder-type-color-gradient-editor-2"
+    class="builder-type-color-gradient-editor-2 ng-hide"
+  ></div>
+</div>

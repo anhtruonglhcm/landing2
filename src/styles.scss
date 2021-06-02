@@ -1,0 +1,21 @@
+@import "./assets/styles/app";
+
+html,
+body {
+  // height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+.ladi-s-resize {
+  display: none;
+}
+.ladi-section {
+  .ladi-resize.ladi-s-resize {
+    display: inline-block;
+  }
+}
+.free-dragging {
+  cursor: move;
+}
