@@ -8,12 +8,28 @@ import { ISection } from './models/section.model';
 })
 export class AppComponent {
   public sectionArray: ISection[];
-  @ViewChild('container', { static: true }) container: ElementRef;
-  @ViewChild('ladiheading', { static: true }) ladiheading: ElementRef;
+  private _innerWidth: number = 0;
+  @ViewChild('builderBorderLeft', { static: true })
+  builderBorderLeft: ElementRef;
+  @ViewChild('builderBorderRight', { static: true })
+  builderBorderRight: ElementRef;
   constructor(private renderer2: Renderer2) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._innerWidth = window.innerWidth;
+    this.renderer2.setStyle(
+      this.builderBorderLeft.nativeElement,
+      'left',
+      (this._innerWidth - 960) / 2 + 'px'
+    );
+    this.renderer2.setStyle(
+      this.builderBorderRight.nativeElement,
+      'right',
+      (this._innerWidth - 960) / 2 - 7 + 'px'
+    );
+    console.log(window.innerHeight);
+  }
   addElement() {
-    let ele = this.ladiheading.nativeElement;
-    this.renderer2.appendChild(this.container.nativeElement, ele);
+    // let ele = this.ladiheading.nativeElement;
+    // this.renderer2.appendChild(this.container.nativeElement, ele);
   }
 }

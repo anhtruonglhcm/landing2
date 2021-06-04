@@ -15,6 +15,8 @@ import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
 import {
   concatMap,
   filter,
+  first,
+  last,
   map,
   mergeMap,
   switchMap,
@@ -247,8 +249,10 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
     }
   }
   initDrag(): void {
-    const dragStart$ = fromEvent<MouseEvent>(this.element, 'mousedown');
     const dragEnd$ = fromEvent<MouseEvent>(this.document, 'mouseup');
+    const dragStart$ = fromEvent<MouseEvent>(this.element, 'mousedown').pipe(
+      takeUntil(dragEnd$)
+    );
     const drag$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
       takeUntil(dragEnd$)
     );
@@ -273,6 +277,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
                       this.element.classList.add('free-dragging');
                       this.quickEditorComponent.setShowColor(false);
                       this.builderEditorComponent.setHasSelected(false);
+                      this.builderEditorComponent.startDragElement();
                     })
                   )
                 : of(value)
@@ -313,12 +318,16 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
       );
     const dragStartSub = mouseDrag$.subscribe();
 
-    const dragEndSub = dragEnd$.subscribe(() => {
+    const dragEndSub = dragEnd$.pipe().subscribe(() => {
       initialX = currentX;
       initialY = currentY;
       this.element.classList.remove('free-dragging');
       this.builderEditorComponent.setHasSelected(true);
       this.builderEditorComponent.hiddenSnap();
+      this.builderEditorComponent.stopDragElement();
+      if (dragEndSub) {
+        dragEndSub.unsubscribe();
+      }
     });
 
     // 6
