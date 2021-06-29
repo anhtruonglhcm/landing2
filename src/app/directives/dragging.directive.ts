@@ -11,7 +11,7 @@ import {
   Renderer2,
   SimpleChanges,
 } from '@angular/core';
-import { fromEvent, merge, Observable, of, Subscription } from 'rxjs';
+import { from, fromEvent, merge, Observable, of, Subscription } from 'rxjs';
 import {
   concatMap,
   filter,
@@ -28,6 +28,7 @@ import {
 import { BuilderEditorComponent } from '../component/builder-editor/builder-editor.component';
 import { QuickEditorComponent } from '../component/quick-editor/quick-editor.component';
 import { CommonService } from '../services/common.service';
+import { CreateHtmlElementService } from '../services/create-html-element.service';
 import { SectionDirective } from './section.directive';
 
 @Directive({
@@ -41,14 +42,19 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
   private wresize: HTMLElement;
   private eresize: HTMLElement;
   private selected: HTMLElement;
-  private eleResize = ['ladi-e-resize', 'ladi-w-resize'];
+  private _elementResize = ['ladi-e-resize', 'ladi-w-resize'];
   private _elementEditor: HTMLElement;
   private _elementHover: HTMLElement;
   private _elementSelected: HTMLElement;
   private _sectionIsSelected: HTMLElement;
-  private _elemtnSectionSelected: HTMLElement;
+  private _elementSectionSelected: HTMLElement;
+  private _elementResizeLeft: HTMLElement;
+  private _elementResizeRight: HTMLElement;
+  private _elementResizeTop: HTMLElement;
+  private _elementResizeBottom: HTMLElement;
 
   private _isDeleteResize = true;
+  private _isResizeTop = false;
   private _ladiParentSubscription: Subscription;
   private _dataId: string;
   constructor(
@@ -57,17 +63,20 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
     private builderEditorComponent: BuilderEditorComponent,
     private quickEditorComponent: QuickEditorComponent,
     private commonService: CommonService,
+    private _createHtmlElementService: CreateHtmlElementService,
     @Inject(DOCUMENT) private document: any
   ) {}
 
   ngOnInit(): void {
     this.element = this.elementRef.nativeElement as HTMLElement;
+    this._isResizeTop = true;
     this._createElement();
     this._createObserver();
   }
   ngOnChanges(changes: SimpleChanges): void {}
   @HostListener('click', ['$event']) onClickElement(event: MouseEvent) {
     event.stopPropagation();
+    event.stopImmediatePropagation();
     this._setIndexElementAndSection();
     this._ladiParentSelected(Number(this.element.dataset.sectionId) | 0);
     let left = Number(this.element.style.left.replace('px', '')) || 0;
@@ -79,117 +88,105 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
     if (this.isDrag) {
       this.initDrag();
     }
-    /**
-     * @author TruongLV
-     * @email anhtruonglavm2@mail.com
-     * @create date 2021-05-27 16:55:04
-     * @modify date 2021-05-27 16:55:04
-     * @desc unsubscribe before delete ladi_parent
-     */
     if (this._ladiParentSubscription) {
       this._ladiParentSubscription.unsubscribe();
     }
-    // this.initDrag();
-    this.render2.appendChild(this.element, this.wresize);
-    this.render2.appendChild(this.element, this.eresize);
+    this.render2.appendChild(this.element, this._elementResizeLeft);
+    this.render2.appendChild(this.element, this._elementResizeRight);
+    if (this._isResizeTop) {
+      this.render2.appendChild(this.element, this._elementResizeTop);
+      this.render2.appendChild(this.element, this._elementResizeBottom);
+    }
     this.render2.appendChild(this.element, this.selected);
     if (this._elementSelected) {
       this.render2.appendChild(this.element, this._elementSelected);
     }
-    const dragStart$ = fromEvent<MouseEvent>(
-      document.querySelectorAll('.ladi-e-resize'),
-      'mousedown'
-    );
-    const dragStartLeft$ = fromEvent<MouseEvent>(
-      document.querySelectorAll('.ladi-w-resize'),
-      'mousedown'
+    if (this._isResizeTop) {
+      this._elementResize = [
+        'ladi-e-resize',
+        'ladi-w-resize',
+        'ladi-n-resize',
+        'ladi-s-resize',
+      ];
+    }
+    const dragStartMerge$ = this._elementResize.map((ele) =>
+      fromEvent<MouseEvent>(
+        document.querySelectorAll(`.${ele}`),
+        'mousedown'
+      ).pipe(map((eventMouseDown) => ({ ele, eventMouseDown })))
     );
     const dragEnd$ = fromEvent<MouseEvent>(this.document, 'mouseup');
     const drag$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
       takeUntil(dragEnd$)
     );
     let dragSub: Subscription;
-    const dragStartSub = dragStart$.subscribe((event: MouseEvent) => {
-      event.stopPropagation();
-      dragSub = drag$
-        .pipe(
-          concatMap((value, index) =>
-            index === 0
-              ? of(value).pipe(
-                  tap(() => {
-                    this.builderEditorComponent.setHasSelected(false);
-                    this._isDeleteResize = false;
-                    this.commonService.isClickSection.next(false);
-                  })
-                )
-              : of(value)
+    const dragStartSub$ = merge(...dragStartMerge$).subscribe(
+      ({ ele, eventMouseDown }) => {
+        eventMouseDown.stopPropagation();
+        let original_width = Number(this.element.style.width.replace('px', ''));
+        let original_height = Number(
+          this.element.style.height.replace('px', '')
+        );
+        let original_x = this.element.getBoundingClientRect().left;
+        let original_y = this.element.getBoundingClientRect().top;
+        let original_mouse_x = eventMouseDown.pageX;
+        let original_mouse_y = eventMouseDown.pageY;
+        dragSub = drag$
+          .pipe(
+            concatMap((value, index) =>
+              index === 0
+                ? of(value).pipe(
+                    tap(() => {
+                      this.builderEditorComponent.setHasSelected(false);
+                      this._isDeleteResize = false;
+                      this.commonService.isClickSection.next(false);
+                    })
+                  )
+                : of(value)
+            )
           )
-        )
-        .subscribe((event: MouseEvent) => {
-          event.preventDefault();
-          event.stopPropagation();
-          const newWidth =
-            event.pageX - this.element.getBoundingClientRect().left;
-          this.render2.setStyle(this.element, 'width', newWidth + 'px');
-        });
+          .subscribe((event: MouseEvent) => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (ele === 'ladi-e-resize') {
+              const newWidth =
+                event.pageX - this.element.getBoundingClientRect().left;
+              this.render2.setStyle(this.element, 'width', newWidth + 'px');
+            }
+            if (ele === 'ladi-w-resize') {
+              const width = original_width - (event.pageX - original_mouse_x);
+              const left = original_x + (event.pageX - original_mouse_x);
+              this.render2.setStyle(this.element, 'width', width + 'px');
+              this.render2.setStyle(this.element, 'left', left + 'px');
+            }
+            if (ele === 'ladi-s-resize') {
+              const newHeight =
+                event.pageY - this.element.getBoundingClientRect().top;
+              this.render2.setStyle(this.element, 'height', newHeight + 'px');
+            }
+            if (ele === 'ladi-n-resize') {
+              const height = original_height - (event.pageY - original_mouse_y);
+              const top = original_y + (event.pageY - original_mouse_y);
+              this.render2.setStyle(this.element, 'height', height + 'px');
+              this.render2.setStyle(this.element, 'top', top + 'px');
+            }
+          });
+      }
+    );
 
-      dragEnd$.pipe(take(1)).subscribe((event: MouseEvent) => {
-        event.stopPropagation();
-        this.builderEditorComponent.setHasSelected(true);
-        setTimeout(() => {
-          this.commonService.isClickSection.next(true);
-          this._isDeleteResize = true;
-        }, 200);
-        if (dragSub) {
-          dragSub.unsubscribe();
-        }
-        if (dragStartSub) {
-          dragStartSub.unsubscribe();
-        }
-      });
-    });
-    const dragStartSubLeft = dragStartLeft$.subscribe((event: MouseEvent) => {
+    dragEnd$.pipe().subscribe((event: MouseEvent) => {
       event.stopPropagation();
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      this._clearSub();
-      let original_width = Number(this.element.style.width.replace('px', ''));
-      let original_x = this.element.getBoundingClientRect().left;
-      let original_mouse_x = event.pageX;
-      dragSub = drag$
-        .pipe(
-          concatMap((value, index) =>
-            index === 0
-              ? of(value).pipe(
-                  tap(() => {
-                    this.builderEditorComponent.setHasSelected(false);
-                  })
-                )
-              : of(value)
-          )
-        )
-        .subscribe((event: MouseEvent) => {
-          event.stopPropagation();
-          event.stopImmediatePropagation();
-          event.preventDefault();
-          const width = original_width - (event.pageX - original_mouse_x);
-          const left = original_x + (event.pageX - original_mouse_x);
-          this.render2.setStyle(this.element, 'width', width + 'px');
-          this.render2.setStyle(this.element, 'left', left + 'px');
-        });
-
-      dragEnd$.pipe(take(1)).subscribe((event: MouseEvent) => {
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        event.preventDefault();
-        this.builderEditorComponent.setHasSelected(true);
-        if (dragSub) {
-          dragSub.unsubscribe();
-        }
-        if (dragStartSubLeft) {
-          dragStartSubLeft.unsubscribe();
-        }
-      });
+      this.builderEditorComponent.setHasSelected(true);
+      setTimeout(() => {
+        this.commonService.isClickSection.next(true);
+        this._isDeleteResize = true;
+      }, 200);
+      if (dragSub) {
+        dragSub.unsubscribe();
+      }
+      if (dragStartSub$) {
+        dragStartSub$.unsubscribe();
+      }
     });
   }
 
@@ -203,6 +200,9 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
   }
   @HostListener('blur', ['$event']) onBlur(event: MouseEvent) {
     console.log('blur');
+  }
+  @HostListener('mouseup', ['$event']) onMouseUp(event: MouseEvent) {
+    // event.stopPropagation();
   }
 
   @HostListener('mouseenter', ['$event']) onMouseenter(event: MouseEvent) {
@@ -237,16 +237,23 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
       }
 
       // this._clearSub();
-      if (this.element.contains(this.wresize) && this._isDeleteResize) {
-        this.render2.removeChild(this.element, this.wresize);
-        this.render2.removeChild(this.element, this.eresize);
+      if (
+        this.element.contains(this._elementResizeLeft) &&
+        this._isDeleteResize
+      ) {
+        this.render2.removeChild(this.element, this._elementResizeLeft);
+        this.render2.removeChild(this.element, this._elementResizeRight);
         this.render2.removeChild(this.element, this.selected);
+        if (this._isResizeTop) {
+          this.render2.removeChild(this.element, this._elementResizeTop);
+          this.render2.removeChild(this.element, this._elementResizeBottom);
+        }
       }
       if (this._elementEditor) {
         this.render2.removeAttribute(this._elementEditor, 'contenteditable');
         this.builderEditorComponent.setIsDrag(true);
       }
-      if (this._elemtnSectionSelected) {
+      if (this._elementSectionSelected) {
         this.render2.removeChild(this._sectionIsSelected, this.selected);
       }
       this.builderEditorComponent.setHasSelected(false);
@@ -334,37 +341,33 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
   }
 
   private _ladiParentSelected(sectionIndex: number) {
-    // this._sectionIsSelected = document.querySelectorAll('.ladi-section')[
-    //   sectionIndex
-    // ] as HTMLElement;
     this._sectionIsSelected = this.element.parentElement;
-    if (!this._elemtnSectionSelected) {
+    if (!this._elementSectionSelected) {
       let el = this.render2.createElement('div');
       this.render2.addClass(el, 'ladi-parent-selected');
-      this._elemtnSectionSelected = el;
+      this._elementSectionSelected = el;
     }
     this.render2.appendChild(
       this._sectionIsSelected,
-      this._elemtnSectionSelected
+      this._elementSectionSelected
     );
-    // const click$ = fromEvent<MouseEvent>(this._elemtnSectionSelected, 'click');
-    // this._ladiParentSubscription = click$.subscribe((mouseEvent) => {
-    //   mouseEvent.preventDefault();
-    //   mouseEvent.stopPropagation();
-    // });
   }
 
   private _createElement() {
-    let childWelement = this.render2.createElement('div');
-    this.render2.addClass(childWelement, 'ladi-resize-display');
-    let childWelement2 = this.render2.createElement('div');
-    this.render2.addClass(childWelement2, 'ladi-resize-display');
-    this.wresize = this.render2.createElement('div');
-    this.wresize.classList.add('ladi-resize', 'ladi-w-resize');
-    this.render2.appendChild(this.wresize, childWelement2);
-    this.eresize = this.render2.createElement('div');
-    this.eresize.classList.add('ladi-resize', 'ladi-e-resize');
-    this.render2.appendChild(this.eresize, childWelement);
+    this._elementResizeLeft =
+      this._elementResizeLeft ||
+      this._createHtmlElementService.getEleResizeLeft();
+    this._elementResizeRight =
+      this._elementResizeRight ||
+      this._createHtmlElementService.getEleResizeRight();
+    if (this._isResizeTop) {
+      this._elementResizeTop =
+        this._elementResizeTop ||
+        this._createHtmlElementService.getEleResizeTop();
+      this._elementResizeBottom =
+        this._elementResizeBottom ||
+        this._createHtmlElementService.getEleResizeBottom();
+    }
     this.selected = this.render2.createElement('div');
     this.selected.classList.add('ladi-selected', 'ladi-size');
   }

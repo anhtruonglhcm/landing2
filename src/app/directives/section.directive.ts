@@ -54,8 +54,13 @@ export class SectionDirective implements OnInit, OnDestroy {
   setDragable(isDrag: boolean) {
     this._dragable = isDrag;
   }
-  @HostListener('focusout', ['$event']) onMouseUp(event: MouseEvent) {
+  @HostListener('focusout', ['$event']) onMousep(event: MouseEvent) {
     console.log('focusout');
+  }
+  @HostListener('mouseup', ['$event']) onMouseUp(event: MouseEvent) {
+    console.log('up section');
+    // event.stopPropagation();
+    this._clearSub();
   }
   @HostListener('click', ['$event']) onClickSection(event) {
     if (this._dragable) {
@@ -65,7 +70,6 @@ export class SectionDirective implements OnInit, OnDestroy {
         this._sectionResizeBottom
       );
       const sectionId: number = Number(this.el.nativeElement.dataset.id);
-      // this.builderEditorComponent.setSelectSelected(sectionId);
       this.builderEditorComponent.setSectionSelect(this.el.nativeElement);
       this.initResize();
       const buttonAddSection = this.el.nativeElement.querySelectorAll(

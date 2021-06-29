@@ -1,36 +1,6 @@
 <app-left-menu (addElement)="addElement($event)"></app-left-menu>
 <div id="builder-editor" class="builder-editor">
   <div id="builder-mouse-hold" class="builder-mouse-hold ladi-hidden"></div>
-  <div
-    id="builder-group-tmp"
-    data-id="GROUP_TMP"
-    class="builder-group-tmp ladi-hidden"
-  >
-    <div class="ladi-resize ladi-n-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-s-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-w-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-e-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-ne-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-nw-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-se-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-    <div class="ladi-resize ladi-sw-resize">
-      <div class="ladi-resize-display"></div>
-    </div>
-  </div>
   <div id="builder-container" class="builder-container ladi-wraper">
     <ng-container *ngFor="let section of sectionArray; index as indexSection">
       <div
@@ -55,7 +25,6 @@
                 <div
                   appDragging
                   [isDrag]="isDrag"
-                  [id]="itemElement.id"
                   [attr.data-id]="'BUTTON' + itemElement.id"
                   [attr.data-sectionIndex]="indexSection"
                   [attr.data-elementIndex]="indexElement"
@@ -106,7 +75,6 @@
                 <div
                   appDragging
                   [isDrag]="isDrag"
-                  id="HEADLINE3"
                   [attr.data-id]="'HEADLINE' + itemElement.id"
                   [attr.data-sectionIndex]="indexSection"
                   [attr.data-elementIndex]="indexElement"
@@ -131,6 +99,33 @@
                     data-locked="false"
                     class="ladi-selected ladi-size"
                   ></div>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="MenuChildAddNew.IMAGE">
+                <div
+                  appDragging
+                  [isDrag]="isDrag"
+                  [attr.data-id]="'IMAGE' + itemElement.id"
+                  [attr.data-sectionIndex]="indexSection"
+                  [attr.data-elementIndex]="indexElement"
+                  [style.width.px]="itemElement.width"
+                  [style.height.px]="itemElement.height"
+                  [style.top.px]="itemElement.top"
+                  [style.left.px]="itemElement.left"
+                  class="ladi-element"
+                >
+                  <div class="ladi-image">
+                    <div
+                      class="ladi-image-background"
+                      style="top: 0px; left: 0px"
+                      [style.width.px]="itemElement.width"
+                      [style.height.px]="itemElement.height"
+                      [style.background-image]="
+                        'url(' + itemElement.urlImage + ')'
+                      "
+                    ></div>
+                    <div class="ladi-overlay"></div>
+                  </div>
                 </div>
               </ng-container>
             </ng-container>

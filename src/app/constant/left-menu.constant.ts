@@ -50,6 +50,7 @@ export const MenuLeft: IMenuLeft[] = [
         name: 'Hình ảnh',
         datakey: MenuChildAddNew.IMAGE,
         icon: 'icon-img',
+        elementType: MenuChildAddNew.IMAGE,
       },
       {
         name: 'Shape',

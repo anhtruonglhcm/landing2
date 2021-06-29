@@ -9,6 +9,12 @@ export const HEADLINE_DEFAULT = {
   HEIGHT: 25,
   INNER_HTML: 'Headline',
 };
+
+export const IMAGE_DEFAULT = {
+  WIDTH: 275,
+  HEIGHT: 180,
+  SRC: 'assets/images/test.jpg',
+};
 // export const HEADING = 'HEADING';
 // export const IMAGE = 'IMAGE';
 // export const PARAGRAPH = 'PARAGRAPH';

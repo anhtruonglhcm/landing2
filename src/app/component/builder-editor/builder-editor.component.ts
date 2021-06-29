@@ -17,6 +17,7 @@ import { MenuChildAddNew } from 'src/app/constant/left-menu.constant';
 import {
   BUTTON_DEFAULT,
   HEADLINE_DEFAULT,
+  IMAGE_DEFAULT,
 } from 'src/app/constant/element.constant';
 import { IWigetButton } from 'src/app/models/wiget-button.model';
 import { debounceTime, last, take, takeLast, takeUntil } from 'rxjs/operators';
@@ -154,7 +155,6 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     const index = this.sectionIndex * 10 + this.elementIndex;
     this.snapTopElement[index] = [element.top, element.top + element.height];
     this.snapLeftElement[index] = [element.left, element.left + element.width];
-    console.log(this.snapLeftElement);
   }
 
   /**
@@ -344,7 +344,7 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     switch (elementType) {
       case MenuChildAddNew.BUTTON: {
         this.sectionArray[this._selectSelectedIndex | 0].element.push({
-          id: this._count,
+          id: this._count++,
           idSection: this._selectSelectedIndex | 0,
           height: BUTTON_DEFAULT.HEIGHT,
           width: BUTTON_DEFAULT.WIDTH,
@@ -356,7 +356,6 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
           elementType: MenuChildAddNew.BUTTON,
           innerHtml: BUTTON_DEFAULT.INNER_HTML,
         });
-        this._count++;
         this.setPositionQuickEditor(
           (this.sectionArray[this._selectSelectedIndex | 0].height -
             BUTTON_DEFAULT.HEIGHT) /
@@ -369,7 +368,7 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
 
       case MenuChildAddNew.TITLE: {
         this.sectionArray[this._selectSelectedIndex | 0].element.push({
-          id: this._count,
+          id: this._count++,
           idSection: this._selectSelectedIndex | 0,
           width: HEADLINE_DEFAULT.WIDTH,
           height: HEADLINE_DEFAULT.HEIGHT,
@@ -388,7 +387,30 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
             50,
           (this._innerWidth - HEADLINE_DEFAULT.WIDTH) / 2
         );
-        this._count++;
+        break;
+      }
+
+      case MenuChildAddNew.IMAGE: {
+        this.sectionArray[this._selectSelectedIndex | 0].element.push({
+          id: this._count++,
+          idSection: this._selectSelectedIndex | 0,
+          width: IMAGE_DEFAULT.WIDTH,
+          height: IMAGE_DEFAULT.HEIGHT,
+          top:
+            (this.sectionArray[this._selectSelectedIndex | 0].height -
+              IMAGE_DEFAULT.HEIGHT) /
+            2,
+          left: (this._innerWidth - IMAGE_DEFAULT.WIDTH) / 2,
+          elementType: MenuChildAddNew.IMAGE,
+          urlImage: IMAGE_DEFAULT.SRC,
+        });
+        this.setPositionQuickEditor(
+          (this.sectionArray[this._selectSelectedIndex | 0].height -
+            IMAGE_DEFAULT.HEIGHT) /
+            2 -
+            50,
+          (this._innerWidth - IMAGE_DEFAULT.WIDTH) / 2
+        );
         break;
       }
     }
