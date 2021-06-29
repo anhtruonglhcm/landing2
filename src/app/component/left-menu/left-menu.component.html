@@ -6,7 +6,7 @@
         <li
           class="builder-menu-two-column"
           [attr.data-key]="itemMenu.dataKey"
-          (click)="clickItem(index)"
+          (click)="clickItem(index, $event)"
         >
           <div
             class="builder-menu-click has-builder-menu-child"
@@ -18,6 +18,7 @@
           <ul
             class="builder-menu-child"
             [ngClass]="{ selected: itemMenu.isSelected }"
+            appChildMenuLeft
           >
             <ng-container *ngFor="let childItem of itemMenu.childMenu">
               <li (click)="clickChild(childItem.elementType, index, $event)">

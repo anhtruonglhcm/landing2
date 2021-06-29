@@ -63,17 +63,19 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
   ngOnInit(): void {
     this.element = this.elementRef.nativeElement as HTMLElement;
     this._createElement();
-    console.log('init');
+    this._createObserver();
   }
   ngOnChanges(changes: SimpleChanges): void {}
   @HostListener('click', ['$event']) onClickElement(event: MouseEvent) {
     event.stopPropagation();
+    this._setIndexElementAndSection();
     this._ladiParentSelected(Number(this.element.dataset.sectionId) | 0);
     let left = Number(this.element.style.left.replace('px', '')) || 0;
     let top = Number(this.element.style.top.replace('px', '')) || 0;
     let height = Number(this.element.style.height.replace('px', '')) || 40;
     this.builderEditorComponent.setHasSelected(true);
-    this.builderEditorComponent.setPositionQuickEditor(top - height - 10, left);
+    this.builderEditorComponent.setElementSelected(this.element);
+    this.builderEditorComponent.setPositionQuickEditor(top - 50, left);
     if (this.isDrag) {
       this.initDrag();
     }
@@ -87,7 +89,6 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
     if (this._ladiParentSubscription) {
       this._ladiParentSubscription.unsubscribe();
     }
-    this.builderEditorComponent.setElementSelected(this.element);
     // this.initDrag();
     this.render2.appendChild(this.element, this.wresize);
     this.render2.appendChild(this.element, this.eresize);
@@ -151,7 +152,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
       event.stopPropagation();
       event.stopImmediatePropagation();
       event.preventDefault();
-      this.clearSub();
+      this._clearSub();
       let original_width = Number(this.element.style.width.replace('px', ''));
       let original_x = this.element.getBoundingClientRect().left;
       let original_mouse_x = event.pageX;
@@ -198,7 +199,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
     )[0] as HTMLElement;
     this.render2.setAttribute(this._elementEditor, 'contenteditable', 'true');
     this.builderEditorComponent.setIsDrag(false);
-    this.clearSub();
+    this._clearSub();
   }
   @HostListener('blur', ['$event']) onBlur(event: MouseEvent) {
     console.log('blur');
@@ -231,8 +232,11 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
           '.ladi-selected'
         )[0] as HTMLElement;
       }
-      this.render2.removeChild(this.element, this._elementSelected);
-      // this.clearSub();
+      if (this._elementSelected) {
+        this.render2.removeChild(this.element, this._elementSelected);
+      }
+
+      // this._clearSub();
       if (this.element.contains(this.wresize) && this._isDeleteResize) {
         this.render2.removeChild(this.element, this.wresize);
         this.render2.removeChild(this.element, this.eresize);
@@ -266,9 +270,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
         switchMap((mouseDownEvent) => {
           initialX = mouseDownEvent.clientX - currentX;
           initialY = mouseDownEvent.clientY - currentY;
-          const elementIndex = Number(this.element.dataset.elementindex);
-          const sectionIndex = Number(this.element.dataset.sectionindex);
-          this.builderEditorComponent.setIndex(elementIndex, sectionIndex);
+          this._setIndexElementAndSection();
           return drag$.pipe(
             switchMap((value, index) =>
               index === 0
@@ -298,26 +300,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
           );
         })
       );
-
-    const mouseDragSnap$: Observable<{ currentY: number; currentX: number }> =
-      dragStart$.pipe(
-        switchMap((mouseDownEvent) => {
-          initialX = mouseDownEvent.clientX - currentX;
-          initialY = mouseDownEvent.clientY - currentY;
-          return drag$.pipe(
-            throttleTime(40),
-            map((mouseMoveEvent) => {
-              mouseMoveEvent.preventDefault();
-              return {
-                currentX: mouseMoveEvent.clientX - initialX,
-                currentY: mouseMoveEvent.clientY - initialY,
-              };
-            })
-          );
-        })
-      );
     const dragStartSub = mouseDrag$.subscribe();
-
     const dragEndSub = dragEnd$.pipe().subscribe(() => {
       initialX = currentX;
       initialY = currentY;
@@ -336,6 +319,18 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
       dragSub,
       dragEndSub,
     ]);
+  }
+  /**
+   * @author TruongLV
+   * @email anhtruonglavm2@gmail.com
+   * @create date 05-06-2021
+   * @modify date 05-06-2021
+   * @desc set index for element and section were selected
+   */
+  private _setIndexElementAndSection() {
+    const elementIndex = Number(this.element.dataset.elementindex);
+    const sectionIndex = Number(this.element.dataset.sectionindex);
+    this.builderEditorComponent.setIndex(elementIndex, sectionIndex);
   }
 
   private _ladiParentSelected(sectionIndex: number) {
@@ -373,6 +368,22 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
     this.selected = this.render2.createElement('div');
     this.selected.classList.add('ladi-selected', 'ladi-size');
   }
+
+  private _createObserver() {
+    var observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            this.initDrag();
+          } else {
+            this._clearSub();
+          }
+        });
+      },
+      { rootMargin: '0px 0px 0px 0px' }
+    );
+    observer.observe(this.element);
+  }
   /**
    * @author TruongLV
    * @email anhtruonglavm2@mail.com
@@ -382,9 +393,9 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
    */
 
   ngOnDestroy(): void {
-    this.clearSub();
+    this._clearSub();
   }
-  clearSub() {
+  private _clearSub() {
     this.subscriptions.forEach((s) => {
       if (s) {
         s.unsubscribe();

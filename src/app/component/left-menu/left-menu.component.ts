@@ -18,12 +18,25 @@ export class LeftMenuComponent implements OnInit {
   ngOnInit(): void {
     this.menuLeft = MenuLeft;
   }
-  clickItem(index: number) {
+  clickItem(index: number, event) {
+    event.stopPropagation();
+    const indexOpen = this.menuLeft.findIndex((e) => e.isSelected === true);
+    if (indexOpen != -1 && indexOpen != index) {
+      this.menuLeft[indexOpen].isSelected =
+        !this.menuLeft[indexOpen].isSelected;
+    }
     this.menuLeft[index].isSelected = !this.menuLeft[index].isSelected;
   }
   clickChild(elementType: MenuChildAddNew, index: number, event: MouseEvent) {
     event.stopPropagation();
     this.addElement.emit(elementType);
-    this.clickItem(index);
+    this.clickItem(index, event);
+  }
+
+  hideChildMenu() {
+    const indexOpen = this.menuLeft.findIndex((e) => e.isSelected === true);
+    if (indexOpen != -1) {
+      this.menuLeft[indexOpen].isSelected = false;
+    }
   }
 }

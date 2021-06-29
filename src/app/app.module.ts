@@ -15,6 +15,7 @@ import { QuickEditorDirective } from './directives/quick-editor.directive';
 import { ColorEditorComponent } from './component/quick-editor/color-editor/color-editor.component';
 import { ElementDraggingDirective } from './directives/element-dragging.directive';
 import { ElementContentDirective } from './directives/element-content.directive';
+import { ChildMenuLeftDirective } from './directives/child-menu-left.directive';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ElementContentDirective } from './directives/element-content.directive'
     QuickEditorDirective,
     ColorEditorComponent,
     ElementDraggingDirective,
-    ElementContentDirective
+    ElementContentDirective,
+    ChildMenuLeftDirective
   ],
   imports: [BrowserModule, BrowserAnimationsModule, DragDropModule],
   providers: [],

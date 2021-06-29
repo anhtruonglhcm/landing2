@@ -19,7 +19,7 @@ import {
   HEADLINE_DEFAULT,
 } from 'src/app/constant/element.constant';
 import { IWigetButton } from 'src/app/models/wiget-button.model';
-import { last, take, takeLast, takeUntil } from 'rxjs/operators';
+import { debounceTime, last, take, takeLast, takeUntil } from 'rxjs/operators';
 import { DOCUMENT } from '@angular/common';
 
 interface ISnap {
@@ -77,9 +77,11 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     this.hasSelectedElement = false;
     this.snapLeft.push((this._innerWidth - 960) / 2);
     this.snapLeft.push((this._innerWidth - 960) / 2 + 960);
-    fromEvent(this.document, 'scroll')
-      .pipe(takeUntil(this._subjectOnDestroy))
-      .subscribe((e: Event) => e);
+    fromEvent(window, 'scroll')
+      .pipe(takeUntil(this._subjectOnDestroy), debounceTime(100))
+      .subscribe(() => {
+        this._scrollTop = window.scrollY;
+      });
     // for (let i = 0; i < 50; i++) {
     //   this.snapLeft.push(i * 100);
     //   this.snapTop.push(i * 50);
@@ -111,17 +113,6 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
       ...this.snapTop,
       ...[].concat(...this.snapTopElement),
     ]);
-    // this.snapTopElement.forEach((e) => {
-    //   this.setSnapTop(currentY, e);
-    // });
-    // for (const ele of this.snapTopElement) {
-    //   this.setSnapTop(currentY, ele);
-    // }
-
-    // this.setSnapTop(currentY, this.snapTopElement[0]);
-    // this.setSnapTop(currentY - 100);
-    // this.sectionArray[this.sectionIndex].element[this.elementIndex].top =
-    //   currentY;
   }
 
   setSelectSelected(id: number | null) {
@@ -134,9 +125,6 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
   setIsDrag(isDrag: boolean) {
     this.isDrag = isDrag;
   }
-  // setPositionElement(top:number,left:number){
-  //   this.sectionArray
-  // }
   /**
    * @author TruongLV
    * @email anhtruonglavm2@gmail.com
@@ -168,6 +156,14 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     this.snapLeftElement[index] = [element.left, element.left + element.width];
     console.log(this.snapLeftElement);
   }
+
+  /**
+   * @author TruongLV
+   * @email anhtruonglavm2@gmail.com
+   * @create date 2021-05-27 17:54:20
+   * @modify date 2021-05-27 17:54:20
+   * @desc set Position for quick editor
+   */
   setPositionQuickEditor(top: number, left: number) {
     let height = 0;
     let i = 0;
@@ -191,6 +187,13 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     this.sectionIndex = sectionIndex;
   }
 
+  /**
+   * @author TruongLV
+   * @email anhtruonglavm2@gmail.com
+   * @create date 2021-05-27 17:54:20
+   * @modify date 2021-05-27 17:54:20
+   * @desc set snap hidden
+   */
   hiddenSnap() {
     this.renderer2.addClass(this.builderSnapTop.nativeElement, 'ladi-hidden');
     this.renderer2.addClass(this.builderSnapLeft.nativeElement, 'ladi-hidden');
@@ -201,7 +204,7 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
    * @email anhtruonglavm2@gmail.com
    * @create date 2021-05-27 17:54:20
    * @modify date 2021-05-27 17:54:20
-   * @desc
+   * @desc check to show snap follow ngang
    */
   setSnapTop(top: number, arr: number[]) {
     const elementHeight =
@@ -354,6 +357,13 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
           innerHtml: BUTTON_DEFAULT.INNER_HTML,
         });
         this._count++;
+        this.setPositionQuickEditor(
+          (this.sectionArray[this._selectSelectedIndex | 0].height -
+            BUTTON_DEFAULT.HEIGHT) /
+            2 -
+            50,
+          (this._innerWidth - BUTTON_DEFAULT.WIDTH) / 2
+        );
         break;
       }
 
@@ -371,12 +381,26 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
           elementType: MenuChildAddNew.TITLE,
           innerHtml: HEADLINE_DEFAULT.INNER_HTML,
         });
+        this.setPositionQuickEditor(
+          (this.sectionArray[this._selectSelectedIndex | 0].height -
+            HEADLINE_DEFAULT.HEIGHT) /
+            2 -
+            50,
+          (this._innerWidth - HEADLINE_DEFAULT.WIDTH) / 2
+        );
         this._count++;
         break;
       }
     }
   }
 
+  /**
+   * @author TruongLV
+   * @email anhtruonglavm2@gmail.com
+   * @create date 2021-05-27 17:54:20
+   * @modify date 2021-05-27 17:54:20
+   * @desc handle when blur element (contenteditable)
+   */
   blur(event, indexElement: number, indexSection: number) {
     (
       this.sectionArray[indexSection].element[indexElement] as IWigetButton
