@@ -75,6 +75,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
   }
   ngOnChanges(changes: SimpleChanges): void {}
   @HostListener('click', ['$event']) onClickElement(event: MouseEvent) {
+    console.log(this.subscriptions);
     event.stopPropagation();
     event.stopImmediatePropagation();
     this._setIndexElementAndSection();
@@ -133,6 +134,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
         let original_mouse_y = eventMouseDown.pageY;
         dragSub = drag$
           .pipe(
+            throttleTime(30),
             concatMap((value, index) =>
               index === 0
                 ? of(value).pipe(
@@ -279,6 +281,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
           initialY = mouseDownEvent.clientY - currentY;
           this._setIndexElementAndSection();
           return drag$.pipe(
+            throttleTime(30),
             switchMap((value, index) =>
               index === 0
                 ? of(value).pipe(
