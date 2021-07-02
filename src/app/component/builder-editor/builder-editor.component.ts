@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DoCheck,
   ElementRef,
   HostListener,
   Inject,
@@ -35,7 +36,7 @@ interface ISnap {
   styleUrls: ['./builder-editor.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BuilderEditorComponent implements OnInit, OnDestroy {
+export class BuilderEditorComponent implements OnInit, OnDestroy, DoCheck {
   @ViewChild('quickEditor', { static: true }) quickEditor: ElementRef;
   @ViewChild('builderSnapLeft', { static: true }) builderSnapLeft: ElementRef;
   @ViewChild('builderSnapTop', { static: true }) builderSnapTop: ElementRef;
@@ -69,6 +70,9 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     private zone: NgZone,
     @Inject(DOCUMENT) private document: any
   ) {}
+  ngDoCheck(): void {
+    // console.log('run change');
+  }
   // @HostListener('document:scroll', ['$event']) handleScroll(event) {
   //   this._scrollTop = window.scrollY;
   // }
