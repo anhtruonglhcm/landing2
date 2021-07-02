@@ -50,6 +50,7 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
   public snapLeftElement: number[][] = [];
   public snapTop: number[] = [];
   public snapTopElement: number[][] = [];
+  public snapTopSection: Object = {};
 
   public elementIndex = 0;
   public sectionIndex = 0;
@@ -93,25 +94,27 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     this._subjectOnDestroy.complete();
   }
   addNewSection() {
+    const idSection = `SECTION${this._count}`;
     this.sectionArray.push({
       id: this._count,
-      idSection: `SECTION${this._count}`,
+      idSection: idSection,
       height: 360,
       element: [],
     });
     this._count++;
-    this.snapTop.push(360 * this.sectionArray.length);
+    // this.snapTop.push(360 * this.sectionArray.length);
+    this.snapTopSection[idSection] =
+      this._getHeightSectionWithIndex(this.sectionArray.length - 1) + 360;
+    console.log(this.snapTopSection);
   }
 
   setPositionElement(currentX: number, currentY: number) {
-    // this.sectionArray[this.sectionIndex].element[this.elementIndex].left =
-    //   currentX;
     this.setSnapLeft(currentX, [
       ...this.snapLeft,
       ...[].concat(...this.snapLeftElement),
     ]);
     this.setSnapTop(currentY, [
-      ...this.snapTop,
+      ...Object.values(this.snapTopSection),
       ...[].concat(...this.snapTopElement),
     ]);
   }
@@ -126,14 +129,8 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
   setIsDrag(isDrag: boolean) {
     this.isDrag = isDrag;
   }
-  /**
-   * @author TruongLV
-   * @email anhtruonglavm2@gmail.com
-   * @create date 2021-05-27 17:54:20
-   * @modify date 2021-05-27 17:54:20
-   * @desc handle when drag element start
-   */
-  startDragElement() {
+
+  handleStartDragElement() {
     let snapTop =
       this.snapTopElement[this.sectionIndex * 10 + this.elementIndex];
     snapTop ? (snapTop.length = 0) : (snapTop = []);
@@ -142,13 +139,7 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     snapLeft ? (snapLeft.length = 0) : (snapLeft = []);
     console.log(this.snapTopElement);
   }
-  /**
-   * @author TruongLV
-   * @email anhtruonglavm2@gmail.com
-   * @create date 2021-05-27 17:54:20
-   * @modify date 2021-05-27 17:54:20
-   * @desc handle when drag element stop
-   */
+
   stopDragElement() {
     const element =
       this.sectionArray[this.sectionIndex].element[this.elementIndex];
@@ -157,13 +148,6 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     this.snapLeftElement[index] = [element.left, element.left + element.width];
   }
 
-  /**
-   * @author TruongLV
-   * @email anhtruonglavm2@gmail.com
-   * @create date 2021-05-27 17:54:20
-   * @modify date 2021-05-27 17:54:20
-   * @desc set Position for quick editor
-   */
   setPositionQuickEditor(top: number, left: number) {
     let height = 0;
     let i = 0;
@@ -269,7 +253,6 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
             'left',
             value + 'px'
           );
-          console.log(value + '+' + left);
         }
         if (Math.abs(value - rightElementLeft) <= 5) {
           this.sectionArray[this.sectionIndex].element[this.elementIndex].left =
@@ -314,20 +297,31 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     this.elementSelected = ele;
   }
 
-  /**
-   * @author TruongLV
-   * @email anhtruonglavm2@gmail.com
-   * @create date 2021-05-27 17:54:20
-   * @modify date 2021-05-27 17:54:20
-   * @desc set Section clicked
-   */
-
   setSectionSelect(el: HTMLElement) {
     this.sectionSelected = el;
   }
+
   setHeightSection(height: number) {
     this.sectionArray[this._selectSelectedIndex].height = height;
   }
+
+  handSectionResize(height: number, sectionId: string) {
+    this.sectionArray[this._selectSelectedIndex].height = height;
+    if (this._selectSelectedIndex === 0) {
+      this.snapTopSection[sectionId] = height;
+    } else {
+      this._getHeightSectionWithIndex(this._selectSelectedIndex) + height;
+    }
+    console.log(this.snapTopSection);
+  }
+  handleStopResizeSection(height: number, sectionId: string) {
+    this.snapTopSection[sectionId] =
+      this._selectSelectedIndex === 0
+        ? height
+        : this._getHeightSectionWithIndex(this._selectSelectedIndex) + height;
+    console.log(this.snapTopSection);
+  }
+
   setIndexSelect(index) {
     this._selectSelectedIndex = index;
   }
@@ -429,8 +423,13 @@ export class BuilderEditorComponent implements OnInit, OnDestroy {
     ).innerHtml = event.target.innerText;
     console.log(this.sectionArray);
   }
-}
 
-// kk
-// [innerHTML]="itemElement.innerHtml"
-// (blur)="blur($event, indexElement, indexSection)"
+  private _getHeightSectionWithIndex(currentIndex: number): number {
+    let i = 0;
+    let totalHeight = 0;
+    for (i; i < currentIndex; i++) {
+      totalHeight += this.sectionArray[i].height;
+    }
+    return totalHeight;
+  }
+}

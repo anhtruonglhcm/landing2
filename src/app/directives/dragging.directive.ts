@@ -286,7 +286,7 @@ export class DraggingDirective implements OnInit, OnChanges, OnDestroy {
                       this.element.classList.add('free-dragging');
                       this.quickEditorComponent.setShowColor(false);
                       this.builderEditorComponent.setHasSelected(false);
-                      this.builderEditorComponent.startDragElement();
+                      this.builderEditorComponent.handleStartDragElement();
                     })
                   )
                 : of(value)

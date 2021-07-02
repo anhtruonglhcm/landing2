@@ -1,4 +1,12 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  Renderer2,
+  ViewChild,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ISection } from './models/section.model';
 
 @Component({
@@ -6,14 +14,14 @@ import { ISection } from './models/section.model';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   public sectionArray: ISection[];
   private _innerWidth: number = 0;
   @ViewChild('builderBorderLeft', { static: true })
   builderBorderLeft: ElementRef;
   @ViewChild('builderBorderRight', { static: true })
   builderBorderRight: ElementRef;
-  constructor(private renderer2: Renderer2) {}
+  constructor(@Inject(Renderer2) private renderer2: Renderer2) {}
   ngOnInit(): void {
     this._innerWidth = window.innerWidth;
     this.renderer2.setStyle(

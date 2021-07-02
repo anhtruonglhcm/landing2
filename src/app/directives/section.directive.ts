@@ -9,7 +9,7 @@ import {
   Renderer2,
 } from '@angular/core';
 import { fromEvent, Subject, Subscription } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, throttleTime } from 'rxjs/operators';
 import { CommonService } from '../services/common.service';
 import { BuilderEditorComponent } from '../component/builder-editor/builder-editor.component';
 import { CreateHtmlElementService } from '../services/create-html-element.service';
@@ -24,6 +24,7 @@ export class SectionDirective implements OnInit, OnDestroy {
   private _sectionSelectedInsert: HTMLElement;
   private _clickAddSectionSub: Subscription;
   private _clickResizeSection: Subscription;
+  private _mouseUpSub: Subscription;
   private _dragable: boolean;
   private _subjectUnsub = new Subject();
   constructor(
@@ -35,7 +36,6 @@ export class SectionDirective implements OnInit, OnDestroy {
     private renderer2: Renderer2
   ) {}
   ngOnInit(): void {
-    // this.initResize();
     this._dragable = true;
     this.commonService.isClickSection
       .asObservable()
@@ -57,11 +57,10 @@ export class SectionDirective implements OnInit, OnDestroy {
   @HostListener('focusout', ['$event']) onMousep(event: MouseEvent) {
     console.log('focusout');
   }
-  @HostListener('mouseup', ['$event']) onMouseUp(event: MouseEvent) {
-    console.log('up section');
-    // event.stopPropagation();
-    this._clearSub();
-  }
+  // @HostListener('mouseup', ['$event']) onMouseUp(event: MouseEvent) {
+  //   console.log(event);
+  //   this._clearSub();
+  // }
   @HostListener('click', ['$event']) onClickSection(event) {
     if (this._dragable) {
       this._getSectionResizeBottom();
@@ -69,9 +68,11 @@ export class SectionDirective implements OnInit, OnDestroy {
         this.el.nativeElement,
         this._sectionResizeBottom
       );
-      const sectionId: number = Number(this.el.nativeElement.dataset.id);
       this.builderEditorComponent.setSectionSelect(this.el.nativeElement);
-      this.initResize();
+      if (!this.subscriptions.length) {
+        this.initResize();
+      }
+
       const buttonAddSection = this.el.nativeElement.querySelectorAll(
         '.ladi-button-add-section'
       );
@@ -93,38 +94,20 @@ export class SectionDirective implements OnInit, OnDestroy {
         event.stopPropagation();
         this.builderEditorComponent.addNewSection();
       });
+      // this._mouseUpSub = fromEvent<MouseEvent>(
+      //   buttonAddSection,
+      //   'mouseup'
+      // ).subscribe((event: MouseEvent) => {
+      //   'mouse up button';
+      //   event.stopImmediatePropagation();
+      //   event.stopPropagation();
+      // });
     }
   }
 
   @HostListener('document:click', ['$event'])
   handleOutsideClick(event) {
-    // let clickAddSectionSub: Subscription;
-    // console.log(event.target);
     if (!this.el.nativeElement.contains(event.target)) {
-      //   console.log(this.el.nativeElement);
-      //   this._getSectionResizeBottom();
-      //   // this._getSectionSelectedInsert();
-      //   this.renderer2.appendChild(
-      //     this.el.nativeElement,
-      //     this._sectionResizeBottom
-      //   );
-      //   // this.renderer2.appendChild(this.el.nativeElement, sectionSelectedInsert);
-      //   this.builderEditorComponent.setSelectSelected(this.sectionSelected.id);
-      //   this.initResize();
-      //   const buttonAddSection = this.el.nativeElement.querySelectorAll(
-      //     '.ladi-button-add-section'
-      //   );
-      //   clickAddSectionSub = fromEvent<MouseEvent>(
-      //     buttonAddSection,
-      //     'click'
-      //   ).subscribe((event: MouseEvent) => {
-      //     event.stopImmediatePropagation();
-      //     event.preventDefault();
-      //     event.stopPropagation();
-      //     this.builderEditorComponent.addNewSection();
-      //   });
-      // } else {
-      // this.commonService.sectionSelectedSubject.next(null);
       if (this._clickAddSectionSub) {
         this._clickAddSectionSub.unsubscribe();
       }
@@ -138,12 +121,14 @@ export class SectionDirective implements OnInit, OnDestroy {
     }
   }
   initResize(): void {
+    const sectionId: string = this.el.nativeElement.dataset.id;
     const resizeElement = this.el.nativeElement.querySelectorAll(
       '.ladi-resize-display'
     );
     const clickElement$ = fromEvent<MouseEvent>(resizeElement, 'click');
     const dragStart$ = fromEvent<MouseEvent>(resizeElement, 'mousedown');
     const dragEnd$ = fromEvent<MouseEvent>(this.document, 'mouseup');
+    const mouseUp$ = fromEvent<MouseEvent>(resizeElement, 'mouseup');
     const drag$ = fromEvent<MouseEvent>(this.document, 'mousemove').pipe(
       takeUntil(dragEnd$)
     );
@@ -152,23 +137,26 @@ export class SectionDirective implements OnInit, OnDestroy {
         Number(this.el.nativeElement.style.height.replace('px', '')) || 0;
     let dragSub: Subscription;
     let clickSub: Subscription;
+    let mouseUpSub: Subscription;
     const dragStartSub = dragStart$.subscribe((event: MouseEvent) => {
       event.stopImmediatePropagation();
       event.stopPropagation();
       initialY = event.clientY - currentY;
-      dragSub = drag$.subscribe((event: MouseEvent) => {
+      dragSub = drag$.pipe(throttleTime(15)).subscribe((event: MouseEvent) => {
         event.stopPropagation();
         event.stopImmediatePropagation();
         currentY = event.clientY - initialY;
-        this.builderEditorComponent.setHeightSection(currentY);
+        this.builderEditorComponent.handSectionResize(currentY, sectionId);
       });
     });
     clickSub = clickElement$.subscribe((event: MouseEvent) => {
       event.stopImmediatePropagation();
       event.stopPropagation();
-      console.log(event);
     });
-    const dragEndSub = dragEnd$.subscribe(() => {
+    const dragEndSub = dragEnd$.subscribe((event: MouseEvent) => {
+      console.log(sectionId);
+      // const lastY = event.clientY - initialY;
+      // this.builderEditorComponent.handleStopResizeSection(lastY, sectionId);
       initialY = currentY;
       if (dragSub) {
         dragSub.unsubscribe();
@@ -192,6 +180,7 @@ export class SectionDirective implements OnInit, OnDestroy {
         s.unsubscribe();
       }
     });
+    this.subscriptions.length = 0;
   }
 
   private _getSectionResizeBottom(): void {
